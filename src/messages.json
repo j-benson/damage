@@ -1,0 +1,10 @@
+[
+  {
+    "message": "I remember my first beer :beer:",
+    "amount": { "max": 30 }
+  },
+  {
+    "message": "Jeez! Good luck today :joy:",
+    "amount": { "min": 100 }
+  }
+]

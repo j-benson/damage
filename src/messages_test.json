@@ -1,0 +1,9 @@
+[
+  {
+    "message": "Min 0",
+    "amount": { "min": 0 }
+  },
+  {
+    "message": ""
+  }
+]

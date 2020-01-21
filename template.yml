@@ -1,0 +1,61 @@
+Transform: AWS::Serverless-2016-10-31
+
+Description:
+  Damage Slack App.
+
+Parameters:
+  SlackChannel:
+    Type: String
+    Description: The ID for the Slack Channel to both post to and read.
+  SlackOAuth:
+    Type: String
+    Description: The OAuth token for authenticating with Slack.
+  SlackWebhook:
+    Type: String
+    Description: The Webhook URL for posting to Slack
+
+Resources:
+  DamageFunction:
+    Type: AWS::Serverless::Function
+    Properties: 
+      Description: Calculates the Damage done over the last day and posts to Slack.
+      CodeUri: src/
+      Handler: function.handle
+      Role: !GetAtt DamageRole.Arn
+      MemorySize: 128
+      Runtime: python3.7
+      Environment: 
+        Variables:
+          SLACK_CHANNEL: !Ref SlackChannel
+          SLACK_OAUTH: !Ref SlackOAuth
+          SLACK_WEBHOOK: !Ref SlackWebhook
+
+  DamageRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  DamagePermission:
+    Type: AWS::Lambda::Permission
+    Properties: 
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref DamageFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt DamageTrigger.Arn
+
+  DamageTrigger:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: Daily trigger for calculating the Damage.
+      ScheduleExpression: cron(0 8 * * ? *)
+      Targets: 
+        - Id: DamageFunction
+          Arn: !GetAtt DamageFunction.Arn

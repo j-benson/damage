@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Damage
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy
+        uses: ./.github/actions/deploy
+        with:
+          aws_access_key_id: ${{ secrets.DEPLOY_AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.DEPLOY_AWS_SECRET_ACCESS_KEY }}
+          slack_channel: ${{ secrets.SLACK_CHANNEL }}
+          slack_oauth: ${{ secrets.SLACK_OAUTH }}
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}

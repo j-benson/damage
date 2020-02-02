@@ -3,12 +3,14 @@ import re
 
 import slack_api
 
-filter_ifttt_message = lambda m : m["type"] == "message" and "subtype" in m and m["subtype"] == "bot_message" and "username" in m and m["username"] == "IFTTT"
+is_ifttt_message = lambda m : m["type"] == "message" \
+  and "subtype" in m and m["subtype"] == "bot_message" \
+  and "username" in m and m["username"] == "IFTTT"
 re_amount = re.compile(r"£[\s]*([0-9.]*)")
 
 def sum_spend(fromDate):
   messages = slack_api.get_history(fromDate)
-  messages = list(filter(filter_ifttt_message, messages))
+  messages = list(filter(is_ifttt_message, messages))
   return sum_spend_in_fallback_attachment(messages)
 
 def sum_spend_in_fallback_attachment(messages):

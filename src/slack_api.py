@@ -3,9 +3,9 @@ import json
 import urllib.request
 import re
 
-channel_id = os.environ["DAMAGE_SLACK_CHANNEL"]
-oauthToken = os.environ["DAMAGE_SLACK_OAUTH"]
-webhook_url = os.environ["DAMAGE_SLACK_WEBHOOK"]
+channel_id = os.environ["SLACK_CHANNEL"]
+oauthToken = os.environ["SLACK_OAUTH"]
+webhook_url = os.environ["SLACK_WEBHOOK"]
 
 def post_message(message):
   headers = { "Content-Type" : "application/json" }

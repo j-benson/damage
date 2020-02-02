@@ -1,0 +1,27 @@
+name: 'Deploy Damage'
+description: 'Packages and deploys the Damage to AWS using AWS SAM.'
+inputs:
+  aws_access_key_id:
+    description: 'Access Key for deploying to AWS.'
+    required: true
+  aws_secret_access_key:
+      description: 'Secret Access Key for deploying to AWS.'
+      required: true
+  slack_channel:
+    description: 'The ID for the Slack channel.'
+    required: true
+  slack_oauth:
+      description: 'The OAuth token for Slack.'
+      required: true
+  slack_webhook:
+    description: 'The webhook URL for posting messages to Slack.'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.aws_access_key_id }}
+    - ${{ inputs.aws_secret_access_key }}
+    - ${{ inputs.slack_channel }}
+    - ${{ inputs.slack_oauth }}
+    - ${{ inputs.slack_webhook }}
